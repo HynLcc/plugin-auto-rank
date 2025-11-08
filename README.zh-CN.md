@@ -1,6 +1,6 @@
 # Teable Markdown 渲染器插件
 
-一个基于 [Next.js](https://nextjs.org) 和 [Teable](https://teable.io) 的强大插件，用于从表格单元格渲染 Markdown 内容，具备增强功能和自定义样式。
+一个基于 [Teable](https://teable.ai) 的插件，可渲染表格单元格 Markdown 内容
 
 ## ✨ 功能特性
 

@@ -6,13 +6,13 @@ import { useFields } from '../../hooks/useFields';
 import { IRankingConfig, IField, IUIField } from '../../types';
 import { Hash, Code, Search, Layers } from '@teable/icons';
 
-interface IColumnSelectorProps {
+interface IFieldSelectorProps {
   config: IRankingConfig;
   onConfigChange: (config: Partial<IRankingConfig>) => void;
   disabled?: boolean;
 }
 
-export function ColumnSelector({ config, onConfigChange, disabled }: IColumnSelectorProps) {
+export function FieldSelector({ config, onConfigChange, disabled }: IFieldSelectorProps) {
   const { t } = useTranslation('common');
 
   // 使用集中式字段数据获取

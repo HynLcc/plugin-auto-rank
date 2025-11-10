@@ -102,7 +102,7 @@ src/
 │   ├── useToast.ts             # Toast 通知
 │   └── useAsyncError.ts        # 异步错误处理
 ├── lib/                         # 业务逻辑和工具
-│   ├── rankingAlgorithms.ts    # 排名计算算法
+│   ├── RankingAlgorithms.ts    # 排名计算算法
 │   └── rankRecord.ts           # 记录排名操作
 ├── types/                       # 全局类型定义
 │   ├── field.ts                # 字段相关类型

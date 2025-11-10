@@ -102,7 +102,7 @@ src/
 │   ├── useToast.ts             # Toast notifications
 │   └── useAsyncError.ts        # Async error handling
 ├── lib/                         # Business logic and utilities
-│   ├── rankingAlgorithms.ts    # Ranking calculation algorithms
+│   ├── RankingAlgorithms.ts    # Ranking calculation algorithms
 │   └── rankRecord.ts           # Record ranking operations
 ├── types/                       # Global type definitions
 │   ├── field.ts                # Field-related types

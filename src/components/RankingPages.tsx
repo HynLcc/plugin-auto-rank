@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@teable/ui-lib/dist/shadcn/ui/card';
-import { ColumnSelector } from './ranking/ColumnSelector';
+import { FieldSelector } from './ranking/FieldSelector';
 import { GroupFieldSelector } from './ranking/GroupFieldSelector';
 import { RankingConfig } from './ranking/RankingConfig';
 import { RankingExecutor } from './ranking/RankingExecutor';
@@ -108,7 +108,7 @@ export function RankingPages() {
           {/* 数据列设置 */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">{t('ranking.columnSettings', '数据列设置')}</h3>
-            <ColumnSelector
+            <FieldSelector
               config={rankingConfig}
               onConfigChange={handleConfigChange}
               disabled={isExecuting}

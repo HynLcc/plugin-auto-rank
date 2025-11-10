@@ -1,6 +1,6 @@
 'use client';
 
-import { getQueryClient } from '@/components/context/get-query-client';
+import { getQueryClient } from '@/components/context/getQueryClient';
 import { RankingPages } from '@/components/RankingPages';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { QueryClientProvider } from '@tanstack/react-query';

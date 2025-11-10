@@ -8,7 +8,7 @@ import * as openApi from '@teable/openapi';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { SortFunc } from '@teable/core';
 import { IRankingConfig, IRecordData } from '../../types';
-import { calculateGroupedRanking } from './rankingAlgorithms';
+import { calculateGroupedRanking } from './RankingAlgorithms';
 import { useGlobalUrlParams } from '../../hooks/useGlobalUrlParams';
 import { useFieldMap } from '../../hooks/useFieldMap';
 import { useToast } from '../../hooks/useToast';

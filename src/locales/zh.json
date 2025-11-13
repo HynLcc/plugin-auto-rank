@@ -1,13 +1,13 @@
 {
   "ranking": {
     "title": "自动排名",
-    "columnSettings": "字段映射",
-    "selectSourceColumn": "选择用于计算排名的字段",
-    "selectTargetColumn": "排名结果将写入的字段",
-    "selectSourceColumnPlaceholder": "请选择字段",
-    "selectTargetColumnPlaceholder": "请选择字段",
-    "noNumericColumns": "未找到数字列",
-    "noColumns": "未找到可用列",
+    "fieldSettings": "字段映射",
+    "selectSourceField": "选择用于计算排名的字段",
+    "selectTargetField": "排名结果将写入的字段",
+    "selectSourceFieldPlaceholder": "请选择字段",
+    "selectTargetFieldPlaceholder": "请选择字段",
+    "noNumericFields": "未找到数字字段",
+    "noFields": "未找到可用字段",
     "rankingRules": "排名规则",
     "sortDirection": "排序方式",
     "ascending": "升序",
@@ -57,7 +57,21 @@
     "noGroupFields": "未找到可用于分组的字段",
     "groupedRankingCompleteDesc": "成功为 {count} 条记录计算排名，共 {groups} 个分组",
     "failedRecords": "失败 {fail} 条",
-    "buttonDisabledHint": "请先完成配置：选择源字段和目标字段"
+    "buttonDisabledHint": "请先完成配置：选择源字段和目标字段",
+    "viewSettings": "视图设置（可选）",
+    "selectView": "选择视图",
+    "selectViewPlaceholder": "请选择视图以筛选数据范围",
+    "loadingViews": "正在加载视图...",
+    "loadViewsError": "加载视图失败",
+    "noViews": "没有可用视图",
+    "viewDescription": "选择视图以筛选数据范围，排名计算将只在选定视图的记录上进行",
+    "viewType": {
+      "grid": "表格视图",
+      "gallery": "画廊视图",
+      "kanban": "看板视图",
+      "calendar": "日历视图",
+      "unknown": "未知类型"
+    }
   },
   "common": {
     "cancel": "取消",

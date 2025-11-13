@@ -101,13 +101,13 @@ export function RankingPages() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Gauge className="w-5 h-5" />
-            {t('ranking.title', '自动排名')}
+            {t('ranking.title')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
           {/* 数据列设置 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">{t('ranking.columnSettings', '数据列设置')}</h3>
+            <h3 className="text-lg font-medium">{t('ranking.fieldSettings')}</h3>
             <FieldSelector
               config={rankingConfig}
               onConfigChange={handleConfigChange}
@@ -117,7 +117,7 @@ export function RankingPages() {
 
           {/* 分组设置 */}
           <div className="space-y-4 pt-2 border-t">
-            <h3 className="text-lg font-medium">{t('ranking.groupSettings', '分组设置')}</h3>
+            <h3 className="text-lg font-medium">{t('ranking.groupSettings')}</h3>
             <GroupFieldSelector
               config={rankingConfig}
               onConfigChange={handleConfigChange}
@@ -127,7 +127,7 @@ export function RankingPages() {
 
           {/* 排名规则 */}
           <div className="space-y-4 pt-2 border-t">
-            <h3 className="text-lg font-medium">{t('ranking.rankingRules', '排名规则')}</h3>
+            <h3 className="text-lg font-medium">{t('ranking.rankingRules')}</h3>
             <RankingConfig
               config={rankingConfig}
               onConfigChange={handleConfigChange}

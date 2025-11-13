@@ -33,7 +33,7 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
 
   // 分页获取所有记录数据
   const { data: records } = useQuery({
-    queryKey: ['all-records', urlParams.tableId, config.sourceColumnId, config.groupColumnId],
+    queryKey: ['all-records', urlParams.tableId, config.sourceColumnId, config.groupColumnId, config.viewId],
     queryFn: async () => {
       if (!urlParams.tableId || !config.sourceColumnId) return [];
 
@@ -53,11 +53,14 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
         if (groupFieldName) projection.push(groupFieldName);
         // 目标字段不需要在获取阶段读取，只在更新时写入
 
-        
+        // 使用配置中的视图ID（如果配置了视图），否则使用URL参数中的视图ID
+        const viewId = config.viewId || urlParams.viewId;
+
+
         // 分页获取所有记录（优化后：只获取id和源字段）
         while (hasMore) {
           const result = await openApi.getRecords(urlParams.tableId, {
-            viewId: urlParams.viewId,
+            viewId: viewId,
             orderBy: [{ fieldId: config.sourceColumnId, order: SortFunc.Desc }],
             take: pageSize,
             skip: skip,

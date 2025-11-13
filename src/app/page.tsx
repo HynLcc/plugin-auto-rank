@@ -23,15 +23,18 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home(props: { searchParams: Promise<IPageParams> }) {
   const searchParams = await props.searchParams;
 
+  // 为开发环境提供更友好的默认值，如果URL中没有指定语言，默认使用英文
+  const lang = searchParams.lang || 'en';
+  const theme = searchParams.theme || 'light';
+
   return (
     <main className="h-screen">
       <EnvProvider>
         <I18nProvider
-          lang={searchParams.lang}
+          lang={lang}
           resources={resources}
-          defaultNS="common"
         >
-          <Main theme={searchParams.theme} />
+          <Main theme={theme} />
         </I18nProvider>
       </EnvProvider>
     </main>

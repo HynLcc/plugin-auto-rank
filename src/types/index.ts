@@ -10,6 +10,7 @@ export interface IRankingConfig {
   rankingMethod: 'standard' | 'dense';
   zeroValueHandling: 'skipZero' | 'includeZero';
   groupColumnId?: string; // 可选的分组字段ID
+  viewId?: string; // 可选的视图ID，用于筛选数据范围
 }
 
 /**
@@ -249,4 +250,17 @@ export interface IRecordQueryParams extends IPaginationParams {
   orderBy?: ISortParams[];
   projection?: string[];
   fieldKeyType?: 'id' | 'name';
+}
+
+/**
+ * 视图类型定义
+ */
+export interface IView {
+  id: string;
+  name: string;
+  type: 'grid' | 'gallery' | 'kanban' | 'calendar' | 'form' | 'component';
+  description?: string;
+  order: number;
+  shared?: boolean;
+  icon?: string;
 }

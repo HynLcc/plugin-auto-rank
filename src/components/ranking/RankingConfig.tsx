@@ -29,7 +29,7 @@ export function RankingConfig({ config, onConfigChange, disabled }: IRankingConf
     <div className="space-y-6">
       {/* 排序方向 */}
       <div className="space-y-3">
-        <Label>{t('ranking.sortDirection', '排序方向')}</Label>
+        <Label>{t('ranking.sortDirection')}</Label>
         <RadioGroup
           value={config.sortDirection}
           onValueChange={handleSortDirectionChange}
@@ -38,18 +38,18 @@ export function RankingConfig({ config, onConfigChange, disabled }: IRankingConf
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="asc" id="asc" />
-            <Label htmlFor="asc">{t('ranking.ascending', '升序')}</Label>
+            <Label htmlFor="asc">{t('ranking.ascending')}</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="desc" id="desc" />
-            <Label htmlFor="desc">{t('ranking.descending', '降序')}</Label>
+            <Label htmlFor="desc">{t('ranking.descending')}</Label>
           </div>
         </RadioGroup>
       </div>
 
       {/* 排名方式 */}
       <div className="space-y-3">
-        <Label>{t('ranking.rankingMethod', '排名方式')}</Label>
+        <Label>{t('ranking.rankingMethod')}</Label>
         <RadioGroup
           value={config.rankingMethod}
           onValueChange={handleRankingMethodChange}
@@ -59,13 +59,13 @@ export function RankingConfig({ config, onConfigChange, disabled }: IRankingConf
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="standard" id="standard" />
             <Label htmlFor="standard">
-              {t('ranking.standardRanking', '标准排名')} (1,2,2,4)
+              {t('ranking.standardRanking')} (1,2,2,4)
             </Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="dense" id="dense" />
             <Label htmlFor="dense">
-              {t('ranking.denseRanking', '密集排名')} (1,2,2,3)
+              {t('ranking.denseRanking')} (1,2,2,3)
             </Label>
           </div>
                   </RadioGroup>
@@ -73,7 +73,7 @@ export function RankingConfig({ config, onConfigChange, disabled }: IRankingConf
 
       {/* 0值处理 */}
       <div className="space-y-3">
-        <Label>{t('ranking.zeroValueHandling', '0值处理')}</Label>
+        <Label>{t('ranking.zeroValueHandling')}</Label>
         <RadioGroup
           value={config.zeroValueHandling}
           onValueChange={handleZeroValueHandlingChange}
@@ -83,13 +83,13 @@ export function RankingConfig({ config, onConfigChange, disabled }: IRankingConf
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="skipZero" id="skipZero" />
             <Label htmlFor="skipZero">
-              {t('ranking.skipZero', '跳过 0 值')}
+              {t('ranking.skipZero')}
             </Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="includeZero" id="includeZero" />
             <Label htmlFor="includeZero">
-              {t('ranking.includeZero', '包含 0 值')}
+              {t('ranking.includeZero')}
             </Label>
           </div>
         </RadioGroup>

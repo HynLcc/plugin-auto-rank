@@ -32,6 +32,7 @@
     "fetchRecordsFailedDesc": "无法获取表格记录，请检查权限",
     "noValidData": "没有有效数据",
     "noValidDataDesc": "没有找到可以排名的有效数据",
+    "noValidDataCheckTable": "请检查表格是否有数据",
     "sameFieldError": "源字段和目标字段不能相同",
     "arrayFieldInfo": "查找/汇总字段将取第一个值进行排名计算",
     "arrayFieldExecuteWarning": "检测到查找/汇总字段，将使用第一个值进行排名计算。是否继续？",

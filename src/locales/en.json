@@ -32,6 +32,7 @@
     "fetchRecordsFailedDesc": "Unable to fetch table records, please check permissions",
     "noValidData": "No valid data found",
     "noValidDataDesc": "No valid data found for ranking calculation",
+    "noValidDataCheckTable": "Please check if the table has data",
     "sameFieldError": "Source field and target field cannot be the same",
     "arrayFieldInfo": "Lookup/Rollup fields will use the first value for ranking calculation process",
     "arrayFieldExecuteWarning": "Lookup/Rollup field detected. The first value will be used for ranking calculation process. Continue?",

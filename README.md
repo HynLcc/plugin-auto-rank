@@ -2,6 +2,10 @@
 
 A [Teable](https://teable.ai) plugin for automatic ranking of table records.
 
+## 📺 Demo
+
+![Demo GIF](./image/20251120012132_rec_.gif)
+
 ## ✨ Features
 
 - 🏆 **Multiple Ranking Methods** - Standard and Dense ranking algorithms

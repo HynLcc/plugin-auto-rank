@@ -18,18 +18,3 @@ export function useFieldMap() {
   }, [fields]);
 }
 
-/**
- * 字段名称到ID映射的记忆化钩子
- */
-export function useFieldNameToIdMap() {
-  const { data: fields } = useFields();
-
-  return useMemo(() => {
-    if (!fields) return {};
-
-    return fields.reduce((map: Record<string, string>, field) => {
-      map[field.name] = field.id;
-      return map;
-    }, {});
-  }, [fields]);
-}

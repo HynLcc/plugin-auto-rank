@@ -5,13 +5,14 @@ import { Button } from '@teable/ui-lib/dist/shadcn/ui/button';
 import { Loader2, CheckCircle } from 'lucide-react';
 import { usePluginBridge } from '@teable/sdk';
 import * as openApi from '@teable/openapi';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { SortFunc } from '@teable/core';
+import { useMutation } from '@tanstack/react-query';
+import { SortFunc, FieldKeyType } from '@teable/core';
 import { IRankingConfig, IRecordData } from '../../types';
 import { calculateGroupedRanking } from './RankingAlgorithms';
 import { useGlobalUrlParams } from '../../hooks/useGlobalUrlParams';
 import { useFieldMap } from '../../hooks/useFieldMap';
 import { useToast } from '../../hooks/useToast';
+import { setAuthToken } from '../../lib/api';
 
 interface IRankingExecutorProps {
   config: IRankingConfig;
@@ -31,87 +32,99 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
   // 使用记忆化的字段映射
   const fieldNameMap = useFieldMap();
 
-  // 分页获取所有记录数据
-  const { data: records } = useQuery({
-    queryKey: ['all-records', urlParams.tableId, config.sourceColumnId, config.groupColumnId, config.viewId],
-    queryFn: async () => {
-      if (!urlParams.tableId || !config.sourceColumnId) return [];
+  // 数据获取函数
+  const fetchRecords = async () => {
+    if (!urlParams.tableId || !config.sourceColumnId) {
+      throw new Error('Missing table ID or source field');
+    }
 
-      try {
-        const allRecords: IRecordData[] = [];
-        let skip = 0;
-        const pageSize = 1000; // 每页1000条记录
-        let hasMore = true;
+    const allRecords: IRecordData[] = [];
+    let skip = 0;
+    const pageSize = 1000; // 每页1000条记录
+    let hasMore = true;
 
-        // 获取字段名称映射
-        const sourceFieldName = fieldNameMap[config.sourceColumnId];
-        const groupFieldName = config.groupColumnId ? fieldNameMap[config.groupColumnId] : undefined;
+    // 获取字段名称映射
+    const sourceFieldName = fieldNameMap[config.sourceColumnId];
+    const groupFieldName = config.groupColumnId ? fieldNameMap[config.groupColumnId] : undefined;
 
-        // 构建字段投影列表（获取必要的字段：id、源字段和分组字段）
-        const projection = ['id'];
-        if (sourceFieldName) projection.push(sourceFieldName);
-        if (groupFieldName) projection.push(groupFieldName);
-        // 目标字段不需要在获取阶段读取，只在更新时写入
+    if (!sourceFieldName) {
+      throw new Error('Source field not found');
+    }
 
-        // 使用配置中的视图ID（如果配置了视图），否则使用URL参数中的视图ID
-        const viewId = config.viewId || urlParams.viewId;
+    // 构建字段投影列表（获取必要的字段：id、源字段和分组字段）
+    const projection = ['id'];
+    if (sourceFieldName) projection.push(sourceFieldName);
+    if (groupFieldName) projection.push(groupFieldName);
+    // 目标字段不需要在获取阶段读取，只在更新时写入
 
+    // 使用配置中的视图ID（如果配置了视图），否则使用URL参数中的视图ID
+    const viewId = config.viewId || urlParams.viewId;
 
-        // 分页获取所有记录（优化后：只获取id和源字段）
-        while (hasMore) {
-          const result = await openApi.getRecords(urlParams.tableId, {
-            viewId: viewId,
-            orderBy: [{ fieldId: config.sourceColumnId, order: SortFunc.Desc }],
-            take: pageSize,
-            skip: skip,
-            projection, // 只投影必要的字段
-            fieldKeyType: 'name' as any // 使用字段名
-          });
+    // 分页获取所有记录（优化后：只获取id和源字段）
+    while (hasMore) {
+      const result = await openApi.getRecords(urlParams.tableId, {
+        viewId: viewId,
+        orderBy: [{ fieldId: config.sourceColumnId, order: SortFunc.Desc }],
+        take: pageSize,
+        skip: skip,
+        projection, // 只投影必要的字段
+        fieldKeyType: FieldKeyType.Name // 使用字段名枚举
+      });
 
-          const records = result.data.records || [];
+      const records = result.data.records || [];
+      allRecords.push(...records as IRecordData[]);
 
-
-          allRecords.push(...records as IRecordData[]);
-
-          // 如果返回的记录数少于pageSize，说明已经获取完所有数据
-          if (records.length < pageSize) {
-            hasMore = false;
-          } else {
-            skip += pageSize;
-          }
-        }
-
-        
-        return allRecords;
-      } catch (error) {
-        console.error('Failed to fetch records:', error);
-        showError(t('ranking.fetchRecordsFailed'), t('ranking.fetchRecordsFailedDesc'));
-        return [];
+      // 如果返回的记录数少于pageSize，说明已经获取完所有数据
+      if (records.length < pageSize) {
+        hasMore = false;
+      } else {
+        skip += pageSize;
       }
-    },
-    enabled: !!urlParams.tableId && !!config.sourceColumnId,
-  });
+    }
 
-  
+    return allRecords;
+  };
+
   // 执行排名的mutation
   const rankingMutation = useMutation({
     mutationFn: async () => {
-      if (!bridge || !records || !config.sourceColumnId || !config.targetColumnId) {
-        throw new Error('Missing required data');
+      if (!bridge || !config.sourceColumnId || !config.targetColumnId) {
+        throw new Error('Missing required configuration');
       }
 
       onExecuteStart();
       setIsShowingProgress(true);
 
       try {
+        // 重新获取临时token以确保操作权限有效
+        try {
+          const tokenResponse = await bridge.getSelfTempToken();
+          setAuthToken(tokenResponse.accessToken);
+        } catch (tokenError) {
+          console.error('Failed to refresh temp token:', tokenError);
+          throw new Error('无法获取操作权限，请重试');
+        }
+
+        // 获取记录数据（只在执行时获取）
+        const records = await fetchRecords();
+
+        if (records.length === 0) {
+          showWarning(t('ranking.noValidData'), t('ranking.noValidDataCheckTable'));
+          return;
+        }
+
         const sourceFieldName = fieldNameMap[config.sourceColumnId];
         const targetFieldName = fieldNameMap[config.targetColumnId];
         const groupFieldName = config.groupColumnId ? fieldNameMap[config.groupColumnId] : undefined;
 
+        if (!sourceFieldName || !targetFieldName) {
+          throw new Error('Field mapping not found');
+        }
+
         // 构建排名输入参数
         const rankingInput: any = {
           records,
-          sourceColumnId: sourceFieldName!,
+          sourceColumnId: sourceFieldName,
           sortDirection: config.sortDirection,
           rankingMethod: config.rankingMethod,
           zeroValueHandling: config.zeroValueHandling,
@@ -160,7 +173,7 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
           try {
             await openApi.updateRecords(urlParams.tableId!, {
               records: batch,
-              fieldKeyType: 'name' as any // 使用字段名而不是字段ID
+              fieldKeyType: FieldKeyType.Name // 使用字段名枚举而不是字段ID
             });
             successCount += batch.length;
           } catch (error) {
@@ -176,12 +189,12 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
         if (isGrouped) {
           // 分组排名结果
           const groupCount = (rankingResult as any).groupCount || 1;
-          resultMessage = t('ranking.groupedRankingCompleteDesc', '成功为 {count} 条记录计算排名，共 {groups} 个分组')
+          resultMessage = t('ranking.groupedRankingCompleteDesc')
             .replace('{count}', successCount.toString())
             .replace('{groups}', groupCount.toString());
         } else {
           // 普通排名结果
-          resultMessage = t('ranking.rankingCompleteDesc', '成功为 {count} 条记录计算排名')
+          resultMessage = t('ranking.rankingCompleteDesc')
             .replace('{count}', successCount.toString());
         }
 
@@ -193,7 +206,7 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
         } else {
           showWarning(
             t('ranking.rankingPartialComplete'),
-            `${resultMessage}，${t('ranking.failedRecords', '失败 {fail} 条').replace('{fail}', failCount.toString())}`
+            `${resultMessage}，${t('ranking.failedRecords').replace('{fail}', failCount.toString())}`
           );
         }
 
@@ -214,11 +227,6 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
   });
 
   const handleExecute = async () => {
-    if (!records || records.length === 0) {
-      showError(t('ranking.noValidData'), '请检查表格是否有数据');
-      return;
-    }
-
     // 直接执行排名，无需任何确认
     rankingMutation.mutate();
   };
@@ -227,12 +235,12 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
 
   const getButtonTitle = () => {
     if (isExecutingRanking) {
-      return t('ranking.executing', '执行中...');
+      return t('ranking.executing');
     }
     if (disabled) {
-      return t('ranking.buttonDisabledHint', '请先完成配置：选择源字段和目标字段');
+      return t('ranking.buttonDisabledHint');
     }
-    return t('ranking.executeRanking', '执行排名');
+    return t('ranking.executeRanking');
   };
 
   const shouldShowLoading = isExecutingRanking;
@@ -250,12 +258,12 @@ export function RankingExecutor({ config, disabled, onExecuteStart, onExecuteCom
       {shouldShowLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {t('ranking.executing', '执行中...')}
+          {t('ranking.executing')}
         </>
       ) : (
         <>
           <CheckCircle className="mr-2 h-4 w-4" />
-          {t('ranking.executeRanking', '执行排名')}
+          {t('ranking.executeRanking')}
         </>
       )}
     </Button>

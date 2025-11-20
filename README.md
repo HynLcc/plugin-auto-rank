@@ -90,31 +90,35 @@ src/
 │   ├── context/                 # React Context providers
 │   │   ├── EnvProvider.tsx      # Environment variable injection
 │   │   ├── I18nProvider.tsx     # Internationalization provider
+│   │   ├── getQueryClient.ts    # QueryClient configuration
 │   │   └── types.ts             # TypeScript type definitions
 │   ├── ranking/                 # Ranking-specific components
-│   │   ├── ColumnSelector.tsx   # Field selection component
+│   │   ├── FieldSelector.tsx    # Field selection component
 │   │   ├── GroupFieldSelector.tsx # Group field selection
+│   │   ├── ViewSelector.tsx     # View selection component
 │   │   ├── RankingConfig.tsx    # Ranking configuration UI
 │   │   ├── RankingExecutor.tsx  # Ranking execution engine
+│   │   ├── RankingAlgorithms.ts # Ranking algorithm implementation
 │   │   └── types.ts             # Ranking type definitions
 │   └── ui/                      # UI utility components
+│       └── Icons.tsx            # Icon components
 ├── hooks/                       # Custom React hooks
 │   ├── useInitApi.ts           # API initialization
 │   ├── useFields.ts            # Field data fetching
 │   ├── useFieldMap.ts          # Field mapping utilities
 │   ├── useGlobalUrlParams.ts   # URL parameter management
 │   ├── useToast.ts             # Toast notifications
-│   └── useAsyncError.ts        # Async error handling
+│   ├── useViewId.ts            # View ID management
+│   └── useViews.ts             # View data fetching
 ├── lib/                         # Business logic and utilities
-│   ├── RankingAlgorithms.ts    # Ranking calculation algorithms
-│   └── rankRecord.ts           # Record ranking operations
+│   └── api.ts                  # API configuration and authentication
 ├── types/                       # Global type definitions
-│   ├── field.ts                # Field-related types
 │   └── index.ts                # Type exports
 ├── locales/                     # Internationalization files
 │   ├── en.json                 # English translations
 │   └── zh.json                 # Chinese translations
-└── scripts/                     # Build and optimization scripts
+└── image/                       # Static image assets
+    └── 20251120012132_rec_.gif # Feature demo GIF
 ```
 
 ## 🔧 Configuration
@@ -211,33 +215,6 @@ The plugin implements two ranking algorithms:
 // Dense ranking without gaps
 ```
 
-## 🚀 Deployment
-
-### Build Process
-```bash
-# Build for production
-npm run build
-```
-
-### Plugin Installation
-1. Build the plugin: `npm run build`
-2. Deploy to your hosting service
-3. Configure in Teable with proper URL parameters
-4. Test plugin functionality in Teable environment
-
-## 🧪 Development
-
-### Code Quality
-- **TypeScript Strict Mode** - Full type safety enabled
-- **ESLint** - Code quality and style enforcement
-- **Prettier** - Consistent code formatting
-
-### Performance Features
-- **React Query** - Efficient data fetching and caching
-- **React.memo** - Component optimization
-- **useMemo/useCallback** - Hook optimization
-- **Code Splitting** - Optimized bundle loading
-
 ## 🤝 Contributing
 
 We welcome contributions! Please follow these steps:
@@ -247,13 +224,6 @@ We welcome contributions! Please follow these steps:
 3. Commit your changes: `git commit -m 'Add amazing feature'`
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
-
-### Development Guidelines
-- Write comprehensive TypeScript types
-- Add English JSDoc comments for all public functions
-- Follow the existing code style and patterns
-- Test your changes thoroughly
-- Update documentation as needed
 
 ## 📄 License
 
